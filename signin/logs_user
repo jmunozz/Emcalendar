@@ -1,0 +1,2 @@
+INSERT into em_users (nom, prenom, mail, pwd, comite_id, droits, date)
+VALUES ('Jordan', 'Munoz', 'j@hotmail.com', 'd1bfaa72671177d4d17bb440c9decacd2414b4996aa5cd9098ef365c72815d63fb1f15822e324752edd46ce4100ebedb22dab85fb5bcd624bf542f5bd6c005df', '2', 'membre', NOW())

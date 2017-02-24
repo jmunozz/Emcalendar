@@ -1,0 +1,2 @@
+INSERT into em_events (titre, lieu, categorie, comite_id, date, description, publique)
+VALUES ('qsdfqsdfqsdf', 'qsdfq', 'qsdfqsdf', '3', '2017-02-24 19:00:00', 'qsfmqskdjfqlmskdjfmqlskdjf', '0')
