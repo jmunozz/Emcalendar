@@ -1,0 +1,69 @@
+<?php
+
+Class	Install {
+
+	public $log ='';
+	public $url_base;
+
+	public function __construct($url_base) {
+		$this->url_base =$url_base;
+	}
+
+	public function index($page = 1) {
+		$this->_1();
+	}
+
+	public function _1() {
+		$success = FALSE;
+		
+		require_once('models/install_model.php');
+		if (!$_POST['submit'] || ($_POST['submit'] && $_POST['action'] == 'check'))
+		{
+			if (($dbh = Install_model::connect_host()) && $dbh->check_bd()) {
+				$success = TRUE;
+				}
+		}
+		else if ($_POST['submit'] && $_POST['action'] == 'reset')
+		{
+			if (($dbh = Install_model::connect_host()) && $dbh->set_bd())
+				$success = TRUE;
+		}
+		$log = $dbh->log;
+		include('views/header.php');
+		include('views/install_1.php');
+		include('views/footer.php');
+	}
+
+	public function _2() {
+
+		$success = FALSE;
+		$alert = '';
+
+		require_once('models/install_model.php');
+		if ($_POST['submit'] && (!$_POST['nom'] || !$_POST['prenom'] 
+		|| !$_POST['pwd'] || !$_POST['email']))
+			$alert = 'Attention tous les champs ne sont pas remplis'.PHP_EOL;
+		else if ($_POST['submit']) {
+			$nom = $_POST['nom'];
+			$prenom = $_POST['prenom'];
+			$pwd = $_POST['pwd'];
+			$email = $_POST['email'];
+			if (($dbh = Install_model::connect_host())
+			&& $dbh->set_admin($nom, $prenom, $email, $pwd))
+				$success = TRUE;
+		}
+		$log = $dbh->log;
+		include('views/header.php');
+		include('views/install_2.php');
+		include('views/footer.php');
+	}
+
+	public function _3() {
+		$success_message = 'L\'installation est terminée';
+		rename('controlers/install.php', 'controlers/install.old');
+		include('views/header.php');
+		include('views/success.php');
+		include('views/footer.php');
+	}
+}
+?>

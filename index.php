@@ -1,26 +1,45 @@
-<!DOCTYPE html>
-<html>
 <?php
-	include ('header/header.html');
-	require_once ('insert.php');
-	require_once ('class.bdd.php');
-?>
-<?php
-	include('header/menu.php');
-?>
-	<body>
-	<div class="main">
-<?php
-	$result = get_events();
-	$i = 0;
-	while (($res = mysqli_fetch_assoc($result)) && ++$i) {
-		if ($res['publique'])
-			include ('events.php');
-		else if (isset($_SESSION['user_id']) && $_SESSION['user_id'] != "")
-				include ('events.php');
+session_name('em');
+session_start();
+$url_base = '/'.basename(__DIR__);
+$controlers_list = array('install.php', 'home.php', 'signin.php', 'login.php', 'add.php');
+# Intègre tous les controlers en se protégeant contre l'upload de fichiers infectés.
+
+$controlers = glob('controlers/*.php'); // glob à partir du dossier courant.
+foreach($controlers as $controler) {
+	if (in_array(basename($controler), $controlers_list)) {
+		require_once($controler);
 	}
-?>
-	</div>
-	<script src="details.js"></script>
-	</body>
-</html>
+}
+$path = $_GET['path'];
+$url = explode('/', $path);
+
+if (!$url[0] || $url[0] == 'index.php' ) {
+	$home = new Home($url_base);
+	$home->index();
+}
+else  {
+	if (!class_exists($url[0])) {
+		header('HTTP/1.O 404 Not Found');
+		require('views/404_view.php');
+		exit();
+	}
+	else {
+		$class = new $url[0]($url_base);
+		if ($url[1]) {
+			if (method_exists($url[0], $url[1])) {
+				if ($url[2])
+					call_user_func(array($class, $url[1]), $url[2]);
+				else
+					call_user_func(array($class, $url[1]));
+			}
+			else {
+				header('HTTP/1.O 404 Not Found');
+				require('views/404_view.php');
+				exit();
+			}
+		}
+		else
+			call_user_func(array($class, 'index'));
+	}
+}

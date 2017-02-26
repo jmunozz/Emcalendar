@@ -1,3 +1,11 @@
+function basename(path) {
+   return (path.split('/').reverse())[0];
+}
+
+var path = new String(window.location)
+console.log(path);
+console.log(basename(path));
+
 $('#co').click(function() {
 		get_connect();
 });
@@ -25,7 +33,7 @@ function get_connect() {
 
 	$('body').on('click', 'span#co_valid', function() {
 		$('#error').remove();
-		$.post('/header/connexion.php', 'user='+$('.co_user input').val()+'&pwd='+
+		$.post('//connexion.php', 'user='+$('.co_user input').val()+'&pwd='+
 		$('.co_pwd input').val(), function(data, status) {
 			if (data) {
 				$('<span id="error"></span').text(data).appendTo($('div.details_header'));
