@@ -10,4 +10,3 @@
 	}
 ?>
 </div>
-<script src=<?=$this->url_base.'/assets/js/details.js'?>></script>

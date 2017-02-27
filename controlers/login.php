@@ -5,11 +5,15 @@ Class Login {
 	public $_data;
 	public $bdd;
 	public $bdd_obj;
+	public $url_base;
+	
+	public function __construct($url_base) {
+		$this->url_base = $url_base;
+	}
 
 	public function index() {
 
-		require_once('models/login_model.php');
-		if (!$_POST['submit'])
+		if (!isset($_POST['submit']) || !$_POST['submit'])
 			return;
 		if (!$_POST['login'] || !$_POST['pwd']) {
 			$this->_data = 'Tous les champs ne sont pas remplis'.PHP_EOL;
@@ -47,7 +51,7 @@ Class Login {
 	public function out(){
 		$_SESSION['user_id'] = '';
 		$_SESSION['droits'] = '';
-		header('Location: '.$this->url_base);
+		echo $this->url_base;
 	}
 }
 

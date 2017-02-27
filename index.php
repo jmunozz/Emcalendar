@@ -1,4 +1,6 @@
 <?php
+//ini_set('display_errors', 1); 
+//error_reporting(E_ALL);
 session_name('em');
 session_start();
 $url_base = '/'.basename(__DIR__);
@@ -11,10 +13,14 @@ foreach($controlers as $controler) {
 		require_once($controler);
 	}
 }
-$path = $_GET['path'];
-$url = explode('/', $path);
+if (isset($_GET['path'])) {
+	$path = $_GET['path'];
+	$url = explode('/', $path);
+}
+else
+	$url = NULL;
 
-if (!$url[0] || $url[0] == 'index.php' ) {
+if (!$url || $url[0] == 'index.php' ) {
 	$home = new Home($url_base);
 	$home->index();
 }

@@ -1,18 +1,24 @@
-function basename(path) {
-   return (path.split('/').reverse())[0];
+
+// Get basename of the website.
+
+function basename() {
+	var path = new String(window.location)
+   return '/'+path.split('/').reverse()[1];
 }
 
-var path = new String(window.location)
-console.log(path);
-console.log(basename(path));
+var url_base = basename();
 
 $('#co').click(function() {
 		get_connect();
 });
 
 $('#deco').click(function() {
-	$.post('/header/deconnexion.php', 'deconnexion=oui');
-	});
+	console.log('deco');
+	$.post(url_base+'/login/out', function(data, status) {
+	if (data) {
+		console.log(data);
+		window.location.replace(data);
+	}});});
 
 function get_connect() {
 	
@@ -33,8 +39,9 @@ function get_connect() {
 
 	$('body').on('click', 'span#co_valid', function() {
 		$('#error').remove();
-		$.post('//connexion.php', 'user='+$('.co_user input').val()+'&pwd='+
+		$.post(url_base+'/login', 'submit=yes&login='+$('.co_user input').val()+'&pwd='+
 		$('.co_pwd input').val(), function(data, status) {
+		console.log(data);
 			if (data) {
 				$('<span id="error"></span').text(data).appendTo($('div.details_header'));
 			}
@@ -42,7 +49,7 @@ function get_connect() {
 				$('div.details_body').remove();
 				$('.details_header h4').text('Vous êtes connecté');
 				$('#co_valid').remove();
-				$('<a href="/"><span></span></a>').addClass('button').
+				$('<a href="'+url_base+'"><span></span></a>').addClass('button').
 				text('Continuer').attr('id', 'co_return').prependTo(details_footer);
 			}
 		});
